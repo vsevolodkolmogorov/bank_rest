@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - include:
+      file: db/migration/changelog-card-status.yaml
+  - include:
+      file: db/migration/changelog-user-role.yaml
+  - include:
+      file: db/migration/changelog-request-status.yaml
+  - include:
+      file: db/migration/changelog-user.yaml
+  - include:
+      file: db/migration/changelog-card.yaml
+  - include:
+      file: db/migration/changelog-card-block.yaml
+  - include:
+      file: db/migration/changelog-initial-data.yaml

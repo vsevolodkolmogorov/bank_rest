@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: vsevolodkolmogorov
+      changes:
+        - insert:
+            tableName: user_role
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: ADMIN
+        - insert:
+            tableName: user_role
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: name
+                  value: USER
+  - changeSet:
+      id: 2
+      author: vsevolodkolmogorov
+      changes:
+        - insert:
+            tableName: card_status
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: ACTIVE
+        - insert:
+            tableName: card_status
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: name
+                  value: BLOCKED
+        - insert:
+            tableName: card_status
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
+              - column:
+                  name: name
+                  value: EXPIRED
+  - changeSet:
+      id: 3
+      author: vsevolodkolmogorov
+      changes:
+        - insert:
+            tableName: request_status
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: name
+                  value: PENDING
+        - insert:
+            tableName: request_status
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: name
+                  value: APPROVED
+        - insert:
+            tableName: request_status
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
+              - column:
+                  name: name
+                  value: REJECTED
