@@ -55,7 +55,7 @@ class CardControllerTest {
         CardResponseDto dto = new CardResponseDto();
         dto.setId(1L);
         dto.setMaskedCardNumber("**** **** **** 1234");
-        dto.setOwnerLogin("user123");
+        dto.setOwnerEmail("user@example.com");
         dto.setExpiryDate(YearMonth.of(2025, 8));
         dto.setStatusName(CardStatusCode.ACTIVE.name());
         dto.setBalance(BigDecimal.valueOf(1500.75));
@@ -79,7 +79,7 @@ class CardControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.ownerLogin", is("user123")))
+                .andExpect(jsonPath("$.ownerEmail", is("user@example.com")))
                 .andExpect(jsonPath("$.balance", is(1500.75)));
     }
 

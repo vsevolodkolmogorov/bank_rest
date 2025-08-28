@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface CardBlockRepository extends JpaRepository<CardBlock, Long> {
     Optional<CardBlock> findCardBlockById(Long id);
-    Optional<CardBlock> findCardBlockByIdAndRequestedByLogin(Long id, String login);
-    Page<CardBlock> findAllByRequestedByLogin(String login, Pageable pageable);
+    Optional<CardBlock> findCardBlockByIdAndRequestedByEmail(Long id, String email);
+    Page<CardBlock> findAllByRequestedByEmail(String email, Pageable pageable);
 }

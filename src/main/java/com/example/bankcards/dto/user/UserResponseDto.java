@@ -25,11 +25,11 @@ public class UserResponseDto {
     @JsonView(JsonViews.Auth.class)
     private Long id;
 
-    @Schema(description = "Логин пользователя",
+    @Schema(description = "Почта пользователя",
             example = "user123",
             required = true)
     @JsonView(JsonViews.Auth.class)
-    private String login;
+    private String email;
 
     @Schema(description = "Название роли пользователя",
             example = "ADMIN",

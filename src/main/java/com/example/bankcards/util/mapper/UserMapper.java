@@ -21,21 +21,21 @@ public class UserMapper {
 
     public User authToEntity(AuthRequestDto dto) {
         User user = User.builder()
-                .login(dto.getLogin())
+                .email(dto.getEmail())
                 .password(dto.getPassword())
                 .build();
-        log.info("Mapped authRequestDto {}, to entity {}", dto.getLogin(), user.getUsername());
+        log.info("Mapped authRequestDto {}, to entity {}", dto.getEmail(), user.getUsername());
         return user;
     }
 
     public User toEntity(UserRequestDto dto, UserRole role) {
         User user = User.builder()
-                .login(dto.getLogin())
+                .email(dto.getEmail())
                 .password(dto.getPassword())
                 .role(role)
                 .build();
 
-        log.info("Mapped userRequestDto {} with role {}, to entity {} ", dto.getLogin(), role.getCode().name(), user.getUsername());
+        log.info("Mapped userRequestDto {} with role {}, to entity {} ", dto.getEmail(), role.getCode().name(), user.getUsername());
         return user;
     }
 
@@ -45,13 +45,13 @@ public class UserMapper {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .id(user.getId())
                 .roleName(user.getRole().getCode().name())
-                .login(user.getLogin())
+                .email(user.getEmail())
                 .cards(cards)
                 .isEnabled(user.isEnabled())
                 .isNonLocked(user.isAccountNonLocked())
                 .build();
 
-        log.info("Mapped entity {} to userResponseDto {} ", user.getLogin(), responseDto.getLogin());
+        log.info("Mapped entity {} to userResponseDto {} ", user.getUsername(), responseDto.getEmail());
         return responseDto;
     }
 }

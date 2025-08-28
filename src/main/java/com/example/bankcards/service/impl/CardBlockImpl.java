@@ -33,8 +33,8 @@ public class CardBlockImpl implements CardBlockService {
     private final CardBlockRepository cardBlockRepository;
 
     @Override
-    public CardBlockResponseDto create(String login, CardBlockRequestDto cardBlockRequestDto) {
-        User user = userService.getUserEntityByLogin(login);
+    public CardBlockResponseDto create(String email, CardBlockRequestDto cardBlockRequestDto) {
+        User user = userService.getUserEntityByEmail(email);
         Card card = cardService.findCardById(cardBlockRequestDto.getCardId());
         cardService.validateUserOwnsCard(card, user);
         RequestStatus status = findRequestStatus(RequestStatusCode.PENDING);
@@ -43,7 +43,7 @@ public class CardBlockImpl implements CardBlockService {
         CardBlock cardBlock = cardBlockRepository.save(mappedCardBlock);
 
         CardBlockResponseDto response = mapper.toResponseDto(cardBlock);
-        log.info("Created card block for cardId {} by user {}, status: {}", cardBlockRequestDto.getCardId(), login, response.getStatus());
+        log.info("Created card block for cardId {} by user {}, status: {}", cardBlockRequestDto.getCardId(), email, response.getStatus());
         return response;
     }
 
@@ -55,9 +55,9 @@ public class CardBlockImpl implements CardBlockService {
     }
 
     @Override
-    public Page<CardBlockResponseDto> getAllRequestByUserLogin(String login, Pageable pageable) {
-        Page<CardBlockResponseDto> result = cardBlockRepository.findAllByRequestedByLogin(login, pageable).map(mapper::toResponseDto);
-        log.info("Get all block requests for user {}, total pages: {}", login, result.getTotalPages());
+    public Page<CardBlockResponseDto> getAllRequestByUserEmail(String email, Pageable pageable) {
+        Page<CardBlockResponseDto> result = cardBlockRepository.findAllByRequestedByEmail(email, pageable).map(mapper::toResponseDto);
+        log.info("Get all block requests for user {}, total pages: {}", email, result.getTotalPages());
         return result;
     }
 
@@ -70,11 +70,11 @@ public class CardBlockImpl implements CardBlockService {
     }
 
     @Override
-    public CardBlockResponseDto getUserRequestById(String login, Long id) {
-        CardBlock cardBlock = cardBlockRepository.findCardBlockByIdAndRequestedByLogin(id, login)
+    public CardBlockResponseDto getUserRequestById(String email, Long id) {
+        CardBlock cardBlock = cardBlockRepository.findCardBlockByIdAndRequestedByEmail(id, email)
                 .orElseThrow(() -> new CardBlockRequestNotFoundException(String.format("Запрос на блокировку карты с идентификатором %s не найден", id)));
         CardBlockResponseDto responseDto = mapper.toResponseDto(cardBlock);
-        log.info("Get block request by id {} for user {}, status: {}", id, login, responseDto.getStatus());
+        log.info("Get block request by id {} for user {}, status: {}", id, email, responseDto.getStatus());
         return responseDto;
     }
 

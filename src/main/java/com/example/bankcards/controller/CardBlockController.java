@@ -60,9 +60,9 @@ public class CardBlockController {
     public CardBlockResponseDto getUserCardBlock(
             @Parameter(description = "Идентификатор запроса на блокировку", example = "1") @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails) {
-        String login = userDetails.getUsername();
-        log.info("Get user {} card block attempt by id: {}", login,  id);
-        return cardBlockService.getUserRequestById(login, id);
+        String email = userDetails.getUsername();
+        log.info("Get user {} card block attempt by id: {}", email,  id);
+        return cardBlockService.getUserRequestById(email, id);
     }
 
     @Operation(summary = "Получение списка запросов на блокировку текущего пользователя", description = "Возвращает страницу запросов на блокировку карт, связанных с текущим пользователем")
@@ -80,9 +80,9 @@ public class CardBlockController {
             @Parameter(description = "Номер страницы (начинается с 0)", example = "0") @RequestParam(defaultValue = "0") int page,
             @Parameter(description = "Размер страницы", example = "10") @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        String login = userDetails.getUsername();
-        log.info("Get users {} card blocks pages attempt: {}", login,  pageable.getPageSize());
-        return cardBlockService.getAllRequestByUserLogin(login, pageable);
+        String email = userDetails.getUsername();
+        log.info("Get users {} card blocks pages attempt: {}", email,  pageable.getPageSize());
+        return cardBlockService.getAllRequestByUserEmail(email, pageable);
     }
 
     @Operation(summary = "Получение всех запросов на блокировку", description = "Возвращает страницу всех запросов на блокировку карт")
@@ -115,9 +115,9 @@ public class CardBlockController {
     public CardBlockResponseDto createCardBlock(
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody CardBlockRequestDto cardBlockDto) {
-        String login = userDetails.getUsername();
-        log.info("Create card {} blocks attempt: {}", cardBlockDto.getCardId(), login);
-        return cardBlockService.create(login, cardBlockDto);
+        String email = userDetails.getUsername();
+        log.info("Create card {} blocks attempt: {}", cardBlockDto.getCardId(), email);
+        return cardBlockService.create(email, cardBlockDto);
     }
 
     @Operation(summary = "Одобрение запроса на блокировку", description = "Одобряет запрос на блокировку карты с указанным комментарием")

@@ -10,4 +10,5 @@ public interface CardInternalService {
     CardResponseDto updateStatus(Long id, UpdateStatusDto dto);
     void validateUserOwnsCard(Card card, User user);
     boolean existsByCardNumberEncrypted(String encryptedCardNumber);
+    void initiationThreeCards(Long userId);
 }

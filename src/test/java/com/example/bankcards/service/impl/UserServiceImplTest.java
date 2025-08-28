@@ -52,19 +52,19 @@ class UserServiceImplTest {
 
         user = new User();
         user.setId(1L);
-        user.setLogin("test");
+        user.setEmail("testUser@example.com");
         user.setPassword("pass");
         user.setRole(userRole);
         user.setAccountNonLocked(true);
         user.setEnabled(true);
 
         userRequestDto = new UserRequestDto();
-        userRequestDto.setLogin("test");
+        userRequestDto.setEmail("testUser@example.com");
         userRequestDto.setPassword("pass");
         userRequestDto.setRole(UserRoleCode.USER);
 
         userResponseDto = new UserResponseDto();
-        userResponseDto.setLogin("test");
+        userResponseDto.setEmail("testUser@example.com");
         userResponseDto.setRoleName("USER");
     }
 
@@ -78,7 +78,7 @@ class UserServiceImplTest {
 
         UserResponseDto result = userService.create(userRequestDto);
 
-        assertEquals("test", result.getLogin());
+        assertEquals("test", result.getEmail());
         assertEquals("USER", result.getRoleName());
         verify(userRepository).save(any(User.class));
     }
@@ -94,7 +94,7 @@ class UserServiceImplTest {
         Page<UserResponseDto> result = userService.getAll(pageable);
 
         assertEquals(1, result.getTotalElements());
-        assertEquals("test", result.getContent().get(0).getLogin());
+        assertEquals("test", result.getContent().get(0).getEmail());
     }
 
     @Test
@@ -104,7 +104,7 @@ class UserServiceImplTest {
 
         UserResponseDto result = userService.getById(1L);
 
-        assertEquals("test", result.getLogin());
+        assertEquals("test", result.getEmail());
     }
 
     @Test
@@ -141,7 +141,7 @@ class UserServiceImplTest {
 
         UserResponseDto result = userService.toggleLockUser(1L);
 
-        assertEquals("test", result.getLogin());
+        assertEquals("test", result.getEmail());
         assertFalse(user.isAccountNonLocked());
         verify(userRepository).save(user);
     }
@@ -154,7 +154,7 @@ class UserServiceImplTest {
 
         UserResponseDto result = userService.toggleDisableUser(1L);
 
-        assertEquals("test", result.getLogin());
+        assertEquals("test", result.getEmail());
         assertFalse(user.isEnabled());
         verify(userRepository).save(user);
     }

@@ -57,7 +57,7 @@ class CardBlockImplTest {
 
         user = new User();
         user.setId(1L);
-        user.setLogin("testUser");
+        user.setEmail("testUser@example.com");
 
         card = new Card();
         card.setId(1L);
@@ -80,7 +80,7 @@ class CardBlockImplTest {
 
     @Test
     void testCreateCardBlock() {
-        when(userService.getUserEntityByLogin("testUser")).thenReturn(user);
+        when(userService.getUserEntityByEmail("testUser@example.com")).thenReturn(user);
         when(cardService.findCardById(1L)).thenReturn(card);
         doNothing().when(cardService).validateUserOwnsCard(card, user);
         when(requestRepository.findByCode(RequestStatusCode.PENDING)).thenReturn(Optional.of(pendingStatus));
@@ -88,7 +88,7 @@ class CardBlockImplTest {
         when(cardBlockRepository.save(cardBlock)).thenReturn(cardBlock);
         when(mapper.toResponseDto(cardBlock)).thenReturn(responseDto);
 
-        CardBlockResponseDto result = cardBlockService.create("testUser", requestDto);
+        CardBlockResponseDto result = cardBlockService.create("testUser@example.com", requestDto);
 
         assertEquals(RequestStatusCode.PENDING, result.getStatus());
         verify(cardBlockRepository).save(cardBlock);
@@ -111,10 +111,10 @@ class CardBlockImplTest {
     void testGetAllRequestByUserLogin() {
         Pageable pageable = PageRequest.of(0, 10);
         Page<CardBlock> page = new PageImpl<>(Collections.singletonList(cardBlock));
-        when(cardBlockRepository.findAllByRequestedByLogin("testUser", pageable)).thenReturn(page);
+        when(cardBlockRepository.findAllByRequestedByEmail("testUser@example.com", pageable)).thenReturn(page);
         when(mapper.toResponseDto(cardBlock)).thenReturn(responseDto);
 
-        Page<CardBlockResponseDto> result = cardBlockService.getAllRequestByUserLogin("testUser", pageable);
+        Page<CardBlockResponseDto> result = cardBlockService.getAllRequestByUserEmail("testUser@example.com", pageable);
 
         assertEquals(1, result.getTotalElements());
         assertEquals(RequestStatusCode.PENDING, result.getContent().get(0).getStatus());

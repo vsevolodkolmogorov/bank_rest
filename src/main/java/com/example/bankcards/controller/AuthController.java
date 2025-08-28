@@ -41,7 +41,7 @@ public class AuthController {
     @PostMapping("/register")
     @JsonView(JsonViews.Auth.class)
     public AuthResponseDto register(@Valid @RequestBody AuthRequestDto authRequestDto) {
-        log.info("Register request received for email: {}", authRequestDto.getLogin());
+        log.info("Register request received for email: {}", authRequestDto.getEmail());
         return authService.register(authRequestDto);
     }
 
@@ -58,7 +58,7 @@ public class AuthController {
     @PostMapping("/login")
     @JsonView(JsonViews.Auth.class)
     public AuthResponseDto login(@Valid @RequestBody AuthRequestDto authRequestDto) {
-        log.info("Login attempt for email: {}", authRequestDto.getLogin());
+        log.info("Login attempt for email: {}", authRequestDto.getEmail());
         return authService.login(authRequestDto);
     }
 

@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 
 public class CardSpecifications {
 
-    public static Specification<Card> belongsToUser(String login) {
+    public static Specification<Card> belongsToUser(String email) {
         return (root, query, cb) ->
-                cb.equal(root.get("user").get("login"), login);
+                cb.equal(root.get("user").get("email"), email);
     }
 
     public static Specification<Card> withLastFourDigits(String lastFourDigits) {

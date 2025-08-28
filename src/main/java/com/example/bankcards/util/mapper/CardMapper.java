@@ -36,12 +36,12 @@ public class CardMapper {
                 .balance(card.getBalance())
                 .expiryDate(card.getExpiryDate())
                 .maskedCardNumber(maskCardNumber.makeMask(card.getLastFourDigits()))
-                .ownerLogin(card.getUser().getLogin())
+                .ownerEmail(card.getUser().getEmail())
                 .statusName(card.getStatus().getCode().name())
                 .build();
 
         log.info("Mapped CardResponseDto: id={}, ownerLogin={}, maskedCardNumber={}, status={}",
-                dto.getId(), dto.getOwnerLogin(), dto.getMaskedCardNumber(), dto.getStatusName());
+                dto.getId(), dto.getOwnerEmail(), dto.getMaskedCardNumber(), dto.getStatusName());
         return dto;
     }
 }

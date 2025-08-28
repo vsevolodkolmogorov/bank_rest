@@ -27,10 +27,10 @@ public class CardResponseDto {
             required = true)
     private String maskedCardNumber;
 
-    @Schema(description = "Логин владельца карты",
+    @Schema(description = "Почта владельца карты",
             example = "user123",
             required = true)
-    private String ownerLogin;
+    private String ownerEmail;
 
     @Schema(description = "Дата истечения срока действия карты в формате yyyy-MM",
             type = "string",

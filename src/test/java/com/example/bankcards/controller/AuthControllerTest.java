@@ -41,7 +41,7 @@ class AuthControllerTest {
         user = UserResponseDto.builder()
                 .id(1L)
                 .roleName("USER")
-                .login("testUser")
+                .email("testUser@example.com")
                 .isEnabled(true)
                 .isNonLocked(true)
                 .build();
@@ -50,7 +50,7 @@ class AuthControllerTest {
     @Test
     void testRegister() throws Exception {
         AuthRequestDto requestDto = new AuthRequestDto();
-        requestDto.setLogin("testUser");
+        requestDto.setEmail("testUser@example.com");
         requestDto.setPassword("Passw0rd*");
 
         AuthResponseDto responseDto = new AuthResponseDto();
@@ -63,16 +63,16 @@ class AuthControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.login").value("testUser"))
+                .andExpect(jsonPath("$.user.email").value("testUser@example.com"))
                 .andExpect(jsonPath("$.token").value("jwt-token"));
 
         verify(authService, times(1)).register(any(AuthRequestDto.class));
     }
 
     @Test
-    void testLogin() throws Exception {
+    void testemail() throws Exception {
         AuthRequestDto requestDto = new AuthRequestDto();
-        requestDto.setLogin("testUser");
+        requestDto.setEmail("testUser@example.com");
         requestDto.setPassword("Passw0rd*");
 
         AuthResponseDto responseDto = new AuthResponseDto();
@@ -81,11 +81,11 @@ class AuthControllerTest {
 
         when(authService.login(any(AuthRequestDto.class))).thenReturn(responseDto);
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/api/auth/email")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.login").value("testUser"))
+                .andExpect(jsonPath("$.user.email").value("testUser@example.com"))
                 .andExpect(jsonPath("$.token").value("jwt-token"));
 
         verify(authService, times(1)).login(any(AuthRequestDto.class));
@@ -103,7 +103,7 @@ class AuthControllerTest {
         mockMvc.perform(get("/api/auth/me")
                         .header("Authorization", token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.user.login").value("testUser"))
+                .andExpect(jsonPath("$.user.email").value("testUser@example.com"))
                 .andExpect(jsonPath("$.token").value("jwt-token"));
 
         verify(authService, times(1)).getCurrentUser("jwt-token");

@@ -41,7 +41,7 @@ public class CardController {
 
     @GetMapping("/{id}/my")
     public CardResponseDto getUserCard(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
-        log.info("Get user card {} for login {}", id, userDetails.getUsername());
+        log.info("Get user card {} for email {}", id, userDetails.getUsername());
         return cardService.getUserCardById(userDetails.getUsername(), id);
     }
 
@@ -65,7 +65,7 @@ public class CardController {
                 .minBalance(minBalance)
                 .maxBalance(maxBalance)
                 .build();
-        return cardService.getAllCardsByUserLogin(userDetails.getUsername(), criteria, pageable);
+        return cardService.getAllCardsByUserEmail(userDetails.getUsername(), criteria, pageable);
     }
 
     @GetMapping

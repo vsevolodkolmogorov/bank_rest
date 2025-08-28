@@ -1,10 +1,7 @@
 package com.example.bankcards.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,16 +14,15 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Базовый объект запроса для данных пользователя")
 public class BaseUserDto {
 
-    @Schema(description = "Логин пользователя",
-            example = "user",
+    @Schema(description = "Почта пользователя",
+            example = "user@example.com",
             required = true,
-            minLength = 3,
-            maxLength = 20,
-            pattern = "^[a-zA-Z0-9_]+$")
-    @NotBlank(message = "Логин не может быть пустым")
-    @Size(min = 3, max = 20, message = "Логин должен содержать от 3 до 20 символов")
-    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Логин может содержать только буквы, цифры и подчеркивания")
-    private String login;
+            minLength = 5,
+            maxLength = 20)
+    @Email
+    @NotBlank(message = "Почта не может быть пустым")
+    @Size(min = 5, max = 50, message = "Почта должен содержать от 3 до 20 символов")
+    private String email;
 
     @Schema(description = "Пароль пользователя",
             example = "Passw0rd*",

@@ -76,7 +76,7 @@ public class UserController {
     @PostMapping
     @JsonView(JsonViews.Auth.class)
     public UserResponseDto createUser(@Valid @RequestBody UserRequestDto userDto) {
-        log.info("Creating new user with login: {}", userDto.getLogin());
+        log.info("Creating new user with email: {}", userDto.getEmail());
         return userService.create(userDto);
     }
 

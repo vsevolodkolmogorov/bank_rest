@@ -89,7 +89,7 @@ class CardBlockControllerTest {
     @DisplayName("GET /api/cardBlock/my — успешно")
     @WithMockUser(username = "testUser")
     void getUserCardBlocks_success() throws Exception {
-        Mockito.when(cardBlockService.getAllRequestByUserLogin(eq("testUser"), any(Pageable.class)))
+        Mockito.when(cardBlockService.getAllRequestByUserEmail(eq("testUser@example.com"), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(responseDto)));
 
         mockMvc.perform(get("/api/cardBlock/my")
@@ -120,7 +120,7 @@ class CardBlockControllerTest {
         CardBlockRequestDto requestDto = new CardBlockRequestDto();
         requestDto.setCardId(123L);
 
-        Mockito.when(cardBlockService.create(eq("testUser"), any(CardBlockRequestDto.class)))
+        Mockito.when(cardBlockService.create(eq("testUser@example.com"), any(CardBlockRequestDto.class)))
                 .thenReturn(responseDto);
 
         mockMvc.perform(post("/api/cardBlock")
@@ -159,6 +159,6 @@ class CardBlockControllerTest {
     @WithMockUser
     void deleteCardBlock_success() throws Exception {
         mockMvc.perform(delete("/api/cardBlock/{id}", 1L))
-                .andExpect(status().isOk()); // Если метод void без @ResponseStatus(NO_CONTENT), то будет 200
+                .andExpect(status().isOk());
     }
 }

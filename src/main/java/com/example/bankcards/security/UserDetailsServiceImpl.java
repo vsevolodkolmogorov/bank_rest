@@ -19,8 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String login) {
-        User user = getUserEntityByLogin(login);
+    public UserDetails loadUserByUsername(String email) {
+        User user = getUserEntityByEmail(email);
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
@@ -33,8 +33,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .build();
     }
 
-    private User getUserEntityByLogin(String login) {
-        return userRepository.findByLoginWithRole(login)
-                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь с логином %s не найден", login)));
+    private User getUserEntityByEmail(String email) {
+        return userRepository.findByEmailWithRole(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь с почтой %s не найден", email)));
     }
 }

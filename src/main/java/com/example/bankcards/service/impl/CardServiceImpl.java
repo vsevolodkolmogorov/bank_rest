@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.YearMonth;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,8 +51,38 @@ public class CardServiceImpl implements CardService, CardInternalService {
 
         Card card = cardRepository.save(mappedCard);
         CardResponseDto result = mapper.toResponseDto(card);
-        log.info("Create card for user {} with number {}", user.getLogin(), result.getMaskedCardNumber());
+        log.info("Create card for user {} with number {}", user.getEmail(), result.getMaskedCardNumber());
         return result;
+    }
+
+    @Transactional
+    public void initiationThreeCards(Long userId) {
+        CardRequestDto cardActive1000 = CardRequestDto.builder()
+                .userId(userId)
+                .balance(BigDecimal.valueOf(1000L))
+                .status(CardStatusCode.ACTIVE)
+                .expiryDate(YearMonth.now().plusYears(3))
+                .build();
+
+        CardRequestDto cardActiveZero = CardRequestDto.builder()
+                .userId(userId)
+                .balance(BigDecimal.valueOf(0L))
+                .status(CardStatusCode.ACTIVE)
+                .expiryDate(YearMonth.now().plusYears(3))
+                .build();
+
+        CardRequestDto cardEXPIRED = CardRequestDto.builder()
+                .userId(userId)
+                .balance(BigDecimal.valueOf(0L))
+                .status(CardStatusCode.EXPIRED)
+                .expiryDate(YearMonth.now())
+                .build();
+
+        List<CardRequestDto> list = List.of(cardActive1000, cardActiveZero, cardEXPIRED);
+
+        for (CardRequestDto card: list) {
+            create(card);
+        }
     }
 
     @Override
@@ -67,15 +98,15 @@ public class CardServiceImpl implements CardService, CardInternalService {
     }
 
     @Override
-    public Page<CardResponseDto> getAllCardsByUserLogin(String login, CardSearchCriteriaDto criteria, Pageable pageable) {
+    public Page<CardResponseDto> getAllCardsByUserEmail(String email, CardSearchCriteriaDto criteria, Pageable pageable) {
         Specification<Card> spec = Specification
-                .where(CardSpecifications.belongsToUser(login))
+                .where(CardSpecifications.belongsToUser(email))
                 .and(CardSpecifications.withLastFourDigits(criteria.getLastFourDigits()))
                 .and(CardSpecifications.withStatus(criteria.getStatus() != null ? findCardStatus(criteria.getStatus()) : null))
                 .and(CardSpecifications.withBalanceRange(criteria.getMinBalance(), criteria.getMaxBalance()));
 
         Page<CardResponseDto> result = cardRepository.findAll(spec, pageable).map(mapper::toResponseDto);
-        log.info("Get all cards for user {}, total pages: {}", login, result.getTotalPages());
+        log.info("Get all cards for user {}, total pages: {}", email, result.getTotalPages());
         return result;
     }
 
@@ -87,10 +118,10 @@ public class CardServiceImpl implements CardService, CardInternalService {
     }
 
     @Override
-    public CardResponseDto getUserCardById(String login, Long id) {
-        Card card = findCardByIdAndUserLogin(id, login);
+    public CardResponseDto getUserCardById(String email, Long id) {
+        Card card = findCardByIdAndUserEmail(id, email);
         CardResponseDto result = mapper.toResponseDto(card);
-        log.info("Get card for user {} by id {} -> {}", login, id, result.getMaskedCardNumber());
+        log.info("Get card for user {} by id {} -> {}", email, id, result.getMaskedCardNumber());
         return result;
     }
 
@@ -120,11 +151,11 @@ public class CardServiceImpl implements CardService, CardInternalService {
 
     @Override
     @Transactional
-    public void transferBetweenCards(String login, CardTransferRequestDto dto) {
+    public void transferBetweenCards(String email, CardTransferRequestDto dto) {
         Card fromCard = findCardById(dto.getFromCardId());
         Card toCard = findCardById(dto.getToCardId());
 
-        validateTransfer(fromCard, toCard, login, dto.getAmount());
+        validateTransfer(fromCard, toCard, email, dto.getAmount());
 
         fromCard.setBalance(fromCard.getBalance().subtract(dto.getAmount()));
         toCard.setBalance(toCard.getBalance().add(dto.getAmount()));
@@ -133,7 +164,7 @@ public class CardServiceImpl implements CardService, CardInternalService {
         cardRepository.save(toCard);
 
         log.info("Transfer {} from card {} to card {} by user {} completed",
-                dto.getAmount(), fromCard.getLastFourDigits(), toCard.getLastFourDigits(), login);
+                dto.getAmount(), fromCard.getLastFourDigits(), toCard.getLastFourDigits(), email);
     }
 
     @Override
@@ -154,13 +185,13 @@ public class CardServiceImpl implements CardService, CardInternalService {
         return cardRepository.findCardByCardNumberEncrypted(encryptedCardNumber).isPresent();
     }
 
-    private Card findCardByIdAndUserLogin(Long id, String login) {
-        return cardRepository.findCardByIdAndUserLogin(id, login)
+    private Card findCardByIdAndUserEmail(Long id, String email) {
+        return cardRepository.findCardByIdAndUserEmail(id, email)
                 .orElseThrow(() -> new CardNotFoundException(String.format("Карта с идентификатором %s не найдена", id)));
     }
 
-    private void validateTransfer(Card fromCard, Card toCard, String login, BigDecimal amount) {
-        User user = userService.getUserEntityByLogin(login);
+    private void validateTransfer(Card fromCard, Card toCard, String email, BigDecimal amount) {
+        User user = userService.getUserEntityByEmail(email);
         validateUserOwnsCard(fromCard, user);
         validateUserOwnsCard(toCard, user);
         validateCardBalance(fromCard.getBalance(), amount);
@@ -203,10 +234,10 @@ public class CardServiceImpl implements CardService, CardInternalService {
         if (user.getRole().getCode() == UserRoleCode.ADMIN) {
             return;
         }
-        if (!card.getUser().getLogin().equals(user.getLogin())) {
+        if (!card.getUser().getEmail().equals(user.getEmail())) {
             throw new AccessDeniedException(
                     String.format("Пользователь %s не является владельцем карты %s",
-                            user.getLogin(),
+                            user.getEmail(),
                             card.getLastFourDigits())
             );
         }

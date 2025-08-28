@@ -31,8 +31,8 @@ public class User implements UserDetails {
     @Schema(description = "Уникальный идентификатор пользователя", example = "10")
     private Long id;
 
-    @Schema(description = "Логин пользователя", example = "user123")
-    private String login;
+    @Schema(description = "Почта пользователя", example = "user123")
+    private String email;
 
     @Schema(description = "Пароль пользователя (хранится в зашифрованном виде)")
     private String password;
@@ -64,7 +64,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.login;
+        return this.email;
     }
 
     @Override

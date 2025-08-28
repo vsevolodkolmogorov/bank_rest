@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService, UserInternalService {
         User mappedUser = mapper.toEntity(userRequestDto, getRole(userRequestDto.getRole()));
         User user = createUserEntity(mappedUser);
         UserResponseDto responseDto = mapper.toResponseDto(user);
-        log.info("Created user {} from userRequestDto", responseDto.getLogin());
+        log.info("Created user {} from userRequestDto", responseDto.getEmail());
         return responseDto;
     }
 
@@ -101,10 +101,10 @@ public class UserServiceImpl implements UserService, UserInternalService {
     }
 
     @Override
-    public User getUserEntityByLogin(String login) {
-        User user = userRepository.findByLoginWithRole(login)
-                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь с логином %s не найден", login)));
-        log.info("Get user {} by login: {}", user.getUsername(), login);
+    public User getUserEntityByEmail(String email) {
+        User user = userRepository.findByEmailWithRole(email)
+                .orElseThrow(() -> new UserNotFoundException(String.format("Пользователь с логином %s не найден", email)));
+        log.info("Get user {} by email: {}", user.getUsername(), email);
         return user;
     }
 
@@ -124,9 +124,9 @@ public class UserServiceImpl implements UserService, UserInternalService {
     }
 
     @Override
-    public boolean existByUserLogin(String login) {
-        boolean isExist = userRepository.findByLoginWithRole(login).isPresent();
-        log.info("Check is user {} exist by login: {}", login, isExist);
+    public boolean existByUserEmail(String email) {
+        boolean isExist = userRepository.findByEmailWithRole(email).isPresent();
+        log.info("Check is user {} exist by email: {}", email, isExist);
         return isExist;
     }
 

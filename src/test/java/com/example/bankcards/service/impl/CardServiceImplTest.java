@@ -60,7 +60,7 @@ class CardServiceImplTest {
     @Test
     void testCreateCardSuccess() {
         User user = new User();
-        user.setLogin("user1");
+        user.setEmail("testUser@example.com");
 
         CardStatus status = new CardStatus();
         status.setCode(CardStatusCode.ACTIVE);
@@ -112,7 +112,7 @@ class CardServiceImplTest {
     @Test
     void testTransferBetweenCardsSuccess() {
         User user = new User();
-        user.setLogin("user1");
+        user.setEmail("testUser@example.com");
         user.setRole(new UserRole(1L, UserRoleCode.USER));
 
         CardStatus cardStatus = new CardStatus(1L, CardStatusCode.ACTIVE);
@@ -133,7 +133,7 @@ class CardServiceImplTest {
 
         when(cardRepository.findCardById(1L)).thenReturn(Optional.of(fromCard));
         when(cardRepository.findCardById(2L)).thenReturn(Optional.of(toCard));
-        when(userService.getUserEntityByLogin("user1")).thenReturn(user);
+        when(userService.getUserEntityByEmail("testUser@example.com")).thenReturn(user);
         when(cardStatusRepository.findByCode(CardStatusCode.ACTIVE)).thenReturn(Optional.of(cardStatus));
 
         CardTransferRequestDto dto = new CardTransferRequestDto();
@@ -153,11 +153,11 @@ class CardServiceImplTest {
     @Test
     void testValidateUserOwnsCardThrowsIfNotOwner() {
         User user = new User();
-        user.setLogin("user1");
+        user.setEmail("testUser@example.com");
         user.setRole(new UserRole(1L, UserRoleCode.USER));
 
         User otherUser = new User();
-        otherUser.setLogin("user2");
+        otherUser.setEmail("testUser2@example.com");
 
         Card card = new Card();
         card.setUser(otherUser);

@@ -4,7 +4,7 @@ import com.example.bankcards.entity.User;
 
 public interface UserInternalService {
     User getUserEntityById(Long id);
-    User getUserEntityByLogin(String login);
+    User getUserEntityByEmail(String email);
     User createUserEntity(User user);
-    boolean existByUserLogin(String login);
+    boolean existByUserEmail(String email);
 }
