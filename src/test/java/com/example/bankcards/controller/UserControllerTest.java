@@ -59,7 +59,7 @@ class UserControllerTest {
     void setUp() {
         userResponseDto = UserResponseDto.builder()
                 .id(1L)
-                .login("user123")
+                .email("user123@gmail.com")
                 .roleName("ADMIN")
                 .isEnabled(true)
                 .isNonLocked(true)
@@ -74,13 +74,13 @@ class UserControllerTest {
         mockMvc.perform(get("/api/user/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.login").value("user123"));
+                .andExpect(jsonPath("$.email").value("user123@gmail.com"));
     }
 
     @Test
     void createUser_ReturnsCreatedUser() throws Exception {
         UserRequestDto requestDto = new UserRequestDto();
-        requestDto.setLogin("user123");
+        requestDto.setEmail("user123@gmail.com");
         requestDto.setPassword("Passw0rd*");
         requestDto.setRole(UserRoleCode.ADMIN);
 
@@ -90,7 +90,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.login").value("user123"));
+                .andExpect(jsonPath("$.email").value("user123@gmail.com"));
     }
 
     @Test
@@ -104,7 +104,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.login").value("user123"));
+                .andExpect(jsonPath("$.email").value("user123@gmail.com"));
     }
 
     @Test
