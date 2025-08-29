@@ -91,6 +91,7 @@ public class CardBlockImpl implements CardBlockService {
     public CardBlockResponseDto rejectRequest(Long id, String comment) {
         CardBlock cardBlock = findCardBlockById(id);
         CardBlockResponseDto response = makeRequest(cardBlock, comment, RequestStatusCode.REJECTED);
+        cardBlockRepository.save(cardBlock);
         log.info("Reject block request id {}, admin comment: {}, result status: {}", id, comment, response.getStatus());
         return response;
     }
